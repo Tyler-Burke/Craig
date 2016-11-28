@@ -130,6 +130,7 @@
       <DependentUpon>EFModel.edmx</DependentUpon>
       <LastGenOutput>EFModel.Context.cs</LastGenOutput>
     </Content>
+    <Content Include="Models\EFModel.edmx.sql" />
     <Content Include="Models\EFModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>EFModel.edmx</DependentUpon>
@@ -158,6 +159,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <None Include="Scripts\_references.js" />
+    <Content Include="Scripts\MYJS\Site.js" />
     <Content Include="SQLStatements\ResetIDCount.sql" />
     <Content Include="Web.config" />
   </ItemGroup>

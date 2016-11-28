@@ -27,6 +27,9 @@ namespace Craig.App_Start
                       "~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/CSS/css").Include("~/CSS/site.css"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/MYJS/Site").Include(
+                     "~/MYJS/Site.js"));
         }
     }
 }

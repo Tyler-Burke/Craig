@@ -151,6 +151,42 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CraigDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="CraigDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Platforms" EntityType="CraigDBModel.Platform" />
+          <EntitySet Name="Calls" EntityType="CraigDBModel.Call" />
+          <EntitySet Name="Locations" EntityType="CraigDBModel.Location" />
+          <EntitySet Name="Resolutions" EntityType="CraigDBModel.Resolution" />
+          <EntitySet Name="Users" EntityType="CraigDBModel.User" />
+          <AssociationSet Name="FK_Call_To_Location" Association="CraigDBModel.FK_Call_To_Location">
+            <End Role="Location" EntitySet="Locations" />
+            <End Role="Call" EntitySet="Calls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Call_To_Platform" Association="CraigDBModel.FK_Call_To_Platform">
+            <End Role="Platform1" EntitySet="Platforms" />
+            <End Role="Call" EntitySet="Calls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Call_To_User" Association="CraigDBModel.FK_Call_To_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Call" EntitySet="Calls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Resolution_To_Call" Association="CraigDBModel.FK_Resolution_To_Call">
+            <End Role="Call" EntitySet="Calls" />
+            <End Role="Resolution" EntitySet="Resolutions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Resolution_To_User" Association="CraigDBModel.FK_Resolution_To_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Resolution" EntitySet="Resolutions" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Platform">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Calls" Relationship="CraigDBModel.FK_Call_To_Platform" FromRole="Platform1" ToRole="Call" />
+        </EntityType>
         <EntityType Name="Call">
           <Key>
             <PropertyRef Name="Id" />
@@ -158,67 +194,58 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Platform_Id" Type="Int32" Nullable="false" />
           <Property Name="Location_Id" Type="Int32" Nullable="false" />
-          <Property Name="Severity" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Extension" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Details" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Severity" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="User_Id" Type="Int32" Nullable="false" />
+          <Property Name="Extension" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Details" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TimeOpened" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastUpdated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Location" Relationship="Self.FK_Call_To_Location" FromRole="Call" ToRole="Location" />
-          <NavigationProperty Name="Platform" Relationship="Self.FK_Call_To_Platform" FromRole="Call" ToRole="Platform" />
-          <NavigationProperty Name="Resolutions" Relationship="Self.FK_Resolution_To_Call" FromRole="Call" ToRole="Resolution" />
-          <Property Name="User_Id" Type="Int32" Nullable="false" />
+          <Property Name="State" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Location" Relationship="CraigDBModel.FK_Call_To_Location" FromRole="Call" ToRole="Location" />
+          <NavigationProperty Name="Platform" Relationship="CraigDBModel.FK_Call_To_Platform" FromRole="Call" ToRole="Platform1" />
           <NavigationProperty Name="User" Relationship="CraigDBModel.FK_Call_To_User" FromRole="Call" ToRole="User" />
+          <NavigationProperty Name="Resolutions" Relationship="CraigDBModel.FK_Resolution_To_Call" FromRole="Call" ToRole="Resolution" />
         </EntityType>
         <EntityType Name="Location">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Calls" Relationship="Self.FK_Call_To_Location" FromRole="Location" ToRole="Call" />
-        </EntityType>
-        <EntityType Name="Platform">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Calls" Relationship="Self.FK_Call_To_Platform" FromRole="Platform" ToRole="Call" />
+          <NavigationProperty Name="Calls" Relationship="CraigDBModel.FK_Call_To_Location" FromRole="Location" ToRole="Call" />
         </EntityType>
         <EntityType Name="Resolution">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Details" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Details" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TimeLogged" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="User_Id" Type="Int32" Nullable="false" />
           <Property Name="Call_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Call" Relationship="Self.FK_Resolution_To_Call" FromRole="Resolution" ToRole="Call" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Resolution_To_User" FromRole="Resolution" ToRole="User" />
+          <NavigationProperty Name="Call" Relationship="CraigDBModel.FK_Resolution_To_Call" FromRole="Resolution" ToRole="Call" />
+          <NavigationProperty Name="User" Relationship="CraigDBModel.FK_Resolution_To_User" FromRole="Resolution" ToRole="User" />
         </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="EmployeeNumber" Type="Int32" Nullable="false" />
-          <Property Name="CraigRole" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ServerListRole" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Resolutions" Relationship="Self.FK_Resolution_To_User" FromRole="User" ToRole="Resolution" />
+          <Property Name="CraigRole" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ServerListRole" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Calls" Relationship="CraigDBModel.FK_Call_To_User" FromRole="User" ToRole="Call" />
+          <NavigationProperty Name="Resolutions" Relationship="CraigDBModel.FK_Resolution_To_User" FromRole="User" ToRole="Resolution" />
         </EntityType>
         <Association Name="FK_Call_To_Location">
-          <End Role="Location" Type="Self.Location" Multiplicity="1" />
-          <End Role="Call" Type="Self.Call" Multiplicity="*" />
+          <End Type="CraigDBModel.Location" Role="Location" Multiplicity="1" />
+          <End Type="CraigDBModel.Call" Role="Call" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Location">
               <PropertyRef Name="Id" />
@@ -229,10 +256,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Call_To_Platform">
-          <End Role="Platform" Type="Self.Platform" Multiplicity="1" />
-          <End Role="Call" Type="Self.Call" Multiplicity="*" />
+          <End Type="CraigDBModel.Platform" Role="Platform1" Multiplicity="1" />
+          <End Type="CraigDBModel.Call" Role="Call" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Platform">
+            <Principal Role="Platform1">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Call">
@@ -240,57 +267,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Resolution_To_Call">
-          <End Role="Call" Type="Self.Call" Multiplicity="1" />
-          <End Role="Resolution" Type="Self.Resolution" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Call">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Resolution">
-              <PropertyRef Name="Call_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Resolution_To_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Resolution" Type="Self.Resolution" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Resolution">
-              <PropertyRef Name="User_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="CraigDBEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Calls" EntityType="Self.Call" />
-          <EntitySet Name="Locations" EntityType="Self.Location" />
-          <EntitySet Name="Platforms" EntityType="Self.Platform" />
-          <EntitySet Name="Resolutions" EntityType="Self.Resolution" />
-          <EntitySet Name="Users" EntityType="Self.User" />
-          <AssociationSet Name="FK_Call_To_Location" Association="Self.FK_Call_To_Location">
-            <End Role="Location" EntitySet="Locations" />
-            <End Role="Call" EntitySet="Calls" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Call_To_Platform" Association="Self.FK_Call_To_Platform">
-            <End Role="Platform" EntitySet="Platforms" />
-            <End Role="Call" EntitySet="Calls" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Resolution_To_Call" Association="Self.FK_Resolution_To_Call">
-            <End Role="Call" EntitySet="Calls" />
-            <End Role="Resolution" EntitySet="Resolutions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Resolution_To_User" Association="Self.FK_Resolution_To_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Resolution" EntitySet="Resolutions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Call_To_User" Association="CraigDBModel.FK_Call_To_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Call" EntitySet="Calls" />
-          </AssociationSet>
-        </EntityContainer>
         <Association Name="FK_Call_To_User">
           <End Type="CraigDBModel.User" Role="User" Multiplicity="1" />
           <End Type="CraigDBModel.Call" Role="Call" Multiplicity="*" />
@@ -303,75 +279,98 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Resolution_To_Call">
+          <End Type="CraigDBModel.Call" Role="Call" Multiplicity="1" />
+          <End Type="CraigDBModel.Resolution" Role="Resolution" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Resolution">
+              <PropertyRef Name="Call_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Resolution_To_User">
+          <End Type="CraigDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="CraigDBModel.Resolution" Role="Resolution" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Resolution">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="CraigDBModelStoreContainer" CdmEntityContainer="CraigDBEntities">
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CraigDBModelStoreContainer" CdmEntityContainer="CraigDBEntities">
+          <EntitySetMapping Name="Platforms">
+            <EntityTypeMapping TypeName="CraigDBModel.Platform">
+              <MappingFragment StoreEntitySet="Platform">
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Calls">
             <EntityTypeMapping TypeName="CraigDBModel.Call">
               <MappingFragment StoreEntitySet="Call">
-                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Platform_Id" ColumnName="Platform_Id" />
-                <ScalarProperty Name="Location_Id" ColumnName="Location_Id" />
-                <ScalarProperty Name="Severity" ColumnName="Severity" />
-                <ScalarProperty Name="Extension" ColumnName="Extension" />
-                <ScalarProperty Name="Details" ColumnName="Details" />
-                <ScalarProperty Name="TimeOpened" ColumnName="TimeOpened" />
-                <ScalarProperty Name="LastUpdated" ColumnName="LastUpdated" />
                 <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="LastUpdated" ColumnName="LastUpdated" />
+                <ScalarProperty Name="TimeOpened" ColumnName="TimeOpened" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
+                <ScalarProperty Name="Extension" ColumnName="Extension" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Severity" ColumnName="Severity" />
+                <ScalarProperty Name="Location_Id" ColumnName="Location_Id" />
+                <ScalarProperty Name="Platform_Id" ColumnName="Platform_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Locations">
             <EntityTypeMapping TypeName="CraigDBModel.Location">
               <MappingFragment StoreEntitySet="Location">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Platforms">
-            <EntityTypeMapping TypeName="CraigDBModel.Platform">
-              <MappingFragment StoreEntitySet="Platform">
-                <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Resolutions">
             <EntityTypeMapping TypeName="CraigDBModel.Resolution">
               <MappingFragment StoreEntitySet="Resolution">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Details" ColumnName="Details" />
-                <ScalarProperty Name="TimeLogged" ColumnName="TimeLogged" />
-                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
                 <ScalarProperty Name="Call_Id" ColumnName="Call_Id" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="TimeLogged" ColumnName="TimeLogged" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="CraigDBModel.User">
               <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
-                <ScalarProperty Name="CraigRole" ColumnName="CraigRole" />
                 <ScalarProperty Name="ServerListRole" ColumnName="ServerListRole" />
+                <ScalarProperty Name="CraigRole" ColumnName="CraigRole" />
+                <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
         </EntityContainerMapping>
-      </Mapping>
-    </edmx:Mappings>
+</Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
   <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
@@ -385,7 +384,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="true" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>

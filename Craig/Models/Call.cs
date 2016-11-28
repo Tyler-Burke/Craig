@@ -24,17 +24,17 @@ namespace Craig.Models
         public int Platform_Id { get; set; }
         public int Location_Id { get; set; }
         public string Severity { get; set; }
+        public int User_Id { get; set; }
         public string Extension { get; set; }
         public string Details { get; set; }
         public System.DateTime TimeOpened { get; set; }
         public System.DateTime LastUpdated { get; set; }
         public string State { get; set; }
-        public int User_Id { get; set; }
     
         public virtual Location Location { get; set; }
         public virtual Platform Platform { get; set; }
+        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Resolution> Resolutions { get; set; }
-        public virtual User User { get; set; }
     }
 }

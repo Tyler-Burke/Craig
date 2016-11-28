@@ -25,9 +25,9 @@ namespace Craig.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Platform> Platforms { get; set; }
         public virtual DbSet<Call> Calls { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
-        public virtual DbSet<Platform> Platforms { get; set; }
         public virtual DbSet<Resolution> Resolutions { get; set; }
         public virtual DbSet<User> Users { get; set; }
     }

@@ -9,3 +9,11 @@
 .align-center-header th{
     text-align: center;
 }
+
+.form-control {
+    display: inline !important;
+}
+
+.validation-right-spacing {
+    padding-left: 15px;
+}
