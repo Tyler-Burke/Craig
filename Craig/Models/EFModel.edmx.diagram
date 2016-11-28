@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="11261072a4644d0d91f86c136d448bee" Name="Diagram1">
+        <EntityTypeShape EntityType="CraigDBModel.Call" Width="1.5" PointX="3.375" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CraigDBModel.Location" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CraigDBModel.Platform" Width="1.5" PointX="0.75" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CraigDBModel.Resolution" Width="1.5" PointX="5.625" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CraigDBModel.User" Width="1.5" PointX="5.625" PointY="4.875" IsExpanded="true" />
+        <AssociationConnector Association="CraigDBModel.FK_Call_To_Location" ManuallyRouted="false" />
+        <AssociationConnector Association="CraigDBModel.FK_Call_To_Platform" ManuallyRouted="false" />
+        <AssociationConnector Association="CraigDBModel.FK_Resolution_To_Call" ManuallyRouted="false" />
+        <AssociationConnector Association="CraigDBModel.FK_Resolution_To_User" ManuallyRouted="false" />
+        <AssociationConnector Association="CraigDBModel.FK_Call_To_User" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
